@@ -1,0 +1,63 @@
+.color1 {color: #dc9a8a;}
+.color2 {color: #d9b07b;}
+.color3 {color: #d9c988;}
+.color4 {color: #e2e3a5;}
+.color5 {color: #e9e8c1;}
+
+body {
+    height: 100vh;
+    background-image: url('https://images4.alphacoders.com/774/774371.jpg');
+    background-repeat: repeat;
+    background-size: auto;
+    background-color: #ededed;
+}
+
+
+#foot {
+    background-color: #39404c !important;
+}
+
+.navbar {
+    background-color: #757e79 !important;
+}
+.row {
+    margin-right: 0;
+    margin-left: 0;
+}
+
+#myCarousel .carousel-item img {
+    object-fit: cover;
+    object-position: 0 -10vw;
+}
+
+@media screen and (min-width: 1600px) {
+    #last-slide {
+        object-fit: cover;
+        object-position: 0 -25vw !important;
+    }    
+}
+
+
+#myCarousel .carousel-item {
+    max-height: 30vh;
+}
+
+.text-border {
+    text-shadow:
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
+}
+
+.btn-vintage {
+    color: #fff !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    cursor: pointer !important;
+  }
+  
+  /* Estilos para botones vintage al pasar el mouse */
+  .btn-vintage:hover {
+    background-color: #6e5726 !important; /* Cambio de color al pasar el mouse */
+  }
