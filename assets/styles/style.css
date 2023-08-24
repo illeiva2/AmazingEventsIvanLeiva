@@ -37,6 +37,13 @@ body {
     }    
 }
 
+td {
+    height: 2rem;
+}
+
+table {
+    width: 90vw !important;
+}
 
 #myCarousel .carousel-item {
     max-height: 30vh;
