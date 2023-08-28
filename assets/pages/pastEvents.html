@@ -126,22 +126,22 @@
             </button>
         </div>
         <form action="">
-            <div class="row px-5 py-3">
-                <div class="row col-md-10">
-                    <div class="col-md-1">
-                        <label><input type="checkbox" name=""> Category</label>
-                    </div>
-                    <div class="col-md-1">
-                        <label><input type="checkbox" name=""> Category</label>
-                    </div>
-                    <div class="col-md-1">
-                        <label><input type="checkbox" name=""> Category</label>
-                    </div>
-                    <div class="col-md-1">
-                        <label><input type="checkbox" name=""> Category</label>
-                    </div>
-                    <div class="col-md-1">
-                        <label><input type="checkbox" name=""> Category</label>
+            <div class="d-flex justify-content-between p-3">
+                <div class="d-flex">
+                    <div class="px-3">Filter by: </div>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Price
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li class="d-flex justify-content-between px-2"><label for="lowPrice"
+                                    class="d-inline">0-50US$</label><input name="lowPrice" type="checkbox" id="low"></li>
+                            <li class="d-flex justify-content-between px-2"><label for="midPrice"
+                                    class="d-inline">50-225US$</label><input name="midPrice" type="checkbox" id="mid"></li>
+                            <li class="d-flex justify-content-between px-2"><label for="highPrice"
+                                    class="d-inline">225+US$</label><input name="highPrice" type="checkbox" id="high"></li>
+                        </ul>
                     </div>
                 </div>
                 <div class="col-md-2">
@@ -155,55 +155,8 @@
                 </div>
             </div>
         </form>
-        <div class="row my-2">
-            <div class="row row-cols-1 row-cols-md-4 g-4">
-                <div class="col">
-                    <div class="card h-100">
-                        <img src="../images/food_fair.jpg" class="card-img-top" alt="...">
-                        <div class="card-body d-flex flex-column justify-content-between">
-                            <h5 class="card-title fs-3">Festival of the collectivities</h5>
-                            <div class="d-flex justify-content-between">
-                                <p>5 US$</p>
-                                <a href="#" class="btn btn-primary flex-end">Details</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card h-100">
-                        <img src="../images/outing_to_the_museum.jpg" class="card-img-top" alt="...">
-                        <div class="card-body d-flex flex-column justify-content-between">
-                            <h5 class="card-title fs-3">Art Exhibition</h5>
-                            <div class="d-flex justify-content-between">
-                                <p>15 US$</p>
-                                <a href="#" class="btn btn-primary flex-end">Details</a>
-                            </div>
-                        </div>
-                    </div>
-                </div><div class="col">
-                    <div class="card h-100">
-                        <img src="../images/marathon.jpg" class="card-img-top" alt="...">
-                        <div class="card-body d-flex flex-column justify-content-between">
-                            <h5 class="card-title fs-3">10K for life</h5>
-                            <div class="d-flex justify-content-between">
-                                <p>3 US$</p>
-                                <a href="#" class="btn btn-primary flex-end">Details</a>
-                            </div>
-                        </div>
-                    </div>
-                </div><div class="col">
-                    <div class="card h-100">
-                        <img src="../images/books.jpg" class="card-img-top" alt="...">
-                        <div class="card-body d-flex flex-column justify-content-between">
-                            <h5 class="card-title fs-3">School Book Fair</h5>
-                            <div class="d-flex justify-content-between">
-                                <p>150 US$</p>
-                                <a href="#" class="btn btn-primary flex-end">Details</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="row justify-content-center vw-95 gap-3 p-3" id="past-container">
+
         </div>
     </main>
     <footer>
@@ -221,6 +174,7 @@
             </div>
         </div>
     </footer>
+    <script src="../js/data.js"></script>
     <script src="../js/index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
         integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
