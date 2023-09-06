@@ -104,8 +104,7 @@
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <img src="../images/optional_banner_5.jpg" class="d-block img-fluid" id="last-slide"
-                        alt="Slide 5">
+                    <img src="../images/optional_banner_5.jpg" class="d-block img-fluid" id="last-slide" alt="Slide 5">
                     <div class="container">
                         <div class="carousel-caption">
                             <h2 class="fw-bold text-border">NUMBERS ARE NOT ONLY NUMBERS</h2>
@@ -127,26 +126,28 @@
         </div>
         <form action="">
             <div class="d-flex justify-content-between p-3">
-                <div class="d-flex">
+                <div class="d-flex" id="check">
                     <div class="px-3">Filter by: </div>
-                    <div class="dropdown">
+                    <div class="dropdown px-3">
                         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
-                            Price
+                            Category
                         </button>
-                        <ul class="dropdown-menu">
-                            <li class="d-flex justify-content-between px-2"><label for="lowPrice"
-                                    class="d-inline">0-50US$</label><input name="lowPrice" type="checkbox" id="low"></li>
-                            <li class="d-flex justify-content-between px-2"><label for="midPrice"
-                                    class="d-inline">50-225US$</label><input name="midPrice" type="checkbox" id="mid"></li>
-                            <li class="d-flex justify-content-between px-2"><label for="highPrice"
-                                    class="d-inline">225+US$</label><input name="highPrice" type="checkbox" id="high"></li>
+                        <ul class="dropdown-menu" id="check-category">
+                        </ul>
+                    </div>
+                    <div class="dropdown px-3">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Place
+                        </button>
+                        <ul class="dropdown-menu" id="check-place">
                         </ul>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="input-group mb-1">
-                        <input type="text" class="form-control" placeholder="Search">
+                        <input type="text" class="form-control" placeholder="Search" id="search">
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="button"><i class="fas fa-search"></i>
                             </button>
@@ -155,8 +156,7 @@
                 </div>
             </div>
         </form>
-        <div class="row justify-content-center vw-95 gap-3 p-3" id="past-container">
-
+        <div class="row justify-content-center vw-95 gap-3 p-3" id="card-container">
         </div>
     </main>
     <footer>
@@ -164,8 +164,7 @@
             <div class="d-flex">
                 <a class="m-3 ms-5" href=""><img src="../images/facebook.png" alt="facebook-logo" width="30"
                         height="30"></a>
-                <a class="m-3" href=""><img src="../images/whatsapp.png" alt="whatsapp-logo" width="30"
-                        height="30"></a>
+                <a class="m-3" href=""><img src="../images/whatsapp.png" alt="whatsapp-logo" width="30" height="30"></a>
                 <a class="m-3" href=""><img src="../images/instagram.png" alt="instagram-logo" width="30"
                         height="30"></a>
             </div>
