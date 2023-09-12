@@ -1,43 +1,17 @@
 const container = document.getElementById("card-container");
+const max = document.getElementById("max")
+const min = document.getElementById("min")
+const larger = document.getElementById("larger")
 const inputText = document.getElementById('search');
 const containerChecksPlace = document.getElementById("check-place");
 const containerChecks = document.getElementById("check");
 const containerChecksCategory = document.getElementById("check-category");
 const detContainer = document.getElementById("container");
+const upStats = document.getElementById("upcoming-statistics")
+const pastStats = document.getElementById("past-statistics")
 let arrayOfEvents = [];
+let arrayOfEvent = [];
 let urlDetails = ""
-
-if (document.title === "Home") {
-    arrayOfEvents = data.events;
-    urlDetails = "./assets/pages/details.html"
-} else if (document.title === "Past Events") {
-    urlDetails = "./details.html"
-    arrayOfEvents = data.events.filter(evento => evento.date < data.currentDate);
-} else if (document.title === "Upcoming Events") {
-    urlDetails = "./details.html"
-    arrayOfEvents = data.events.filter(evento => evento.date > data.currentDate);
-} else if (document.title === "Details") {
-    const queryString = location.search
-    const params = new URLSearchParams(queryString)
-    const id = params.get("id")
-    let eventt = data.events.find((even) => even._id == id)
-    createCardDetails(eventt)
-}
-createCheckboxes(arrayOfEvents, "Category");
-createCheckboxes(arrayOfEvents, "Place");
-createCards(arrayOfEvents, container)
-
-inputText.addEventListener("input", () => {
-    let filtro = filterByText(arrayOfEvents, inputText.value);
-    let filtro2 = filterByCategory(filtro);
-    createCards(filtro2, container);
-});
-
-containerChecks.addEventListener("change", () => {
-    let filtro = filterByCategory(arrayOfEvents);
-    let filtro2 = filterByText(filtro, inputText.value);
-    createCards(filtro2, container);
-});
 
 function createCards(arrayEvent, container) {
     if (arrayEvent == 0) {
@@ -66,7 +40,6 @@ function filterByCategory(array) {
     let arrayCheck = Array.from(document.querySelectorAll("input[type='checkbox']"))
         .filter(check => check.checked)
         .map(checked => checked.value);
-    console.log(arrayCheck);
     if (arrayCheck.length == 0) {
         return array;
     }
@@ -92,7 +65,6 @@ function createCheckboxes(array, category) {
         place.forEach(place => (html += createCheckbox(place)));
         containerChecksCategory.innerHTML = html;
     }
-
 }
 
 function createCheckbox(data) {
@@ -118,5 +90,129 @@ function createCardDetails(eventt) {
     <p class="card-text">Capacity: ${eventt.capacity}</p>
     <p class="card-text">Estimated: ${eventt.estimate}</p>
   </div>`
-  detContainer.appendChild(cardDetail)
+    detContainer.appendChild(cardDetail)
+}
+
+fetch("https://mindhub-xj03.onrender.com/api/amazing")
+    .then(response => response.json())
+    .then(datos => {
+        arrayOfEvent = datos
+        if (document.title === "Home") {
+            arrayOfEvents = arrayOfEvent.events;
+            urlDetails = "./assets/pages/details.html"
+            createFilters()
+        } else if (document.title === "Past Events") {
+            arrayOfEvents = arrayOfEvent.events.filter(evento => evento.date < arrayOfEvent.currentDate);
+            createFilters()
+        } else if (document.title === "Upcoming Events") {
+            arrayOfEvents = arrayOfEvent.events.filter(evento => evento.date > arrayOfEvent.currentDate);
+            createFilters()
+        } else if (document.title === "Details") {
+            const queryString = location.search
+            const params = new URLSearchParams(queryString)
+            const id = params.get("id")
+            let eventt = arrayOfEvent.events.find((even) => even._id == id)
+            createCardDetails(eventt)
+        } else if (document.title === "Stats") {
+            let arrayPast = arrayOfEvent.events.filter(evento => evento.date < arrayOfEvent.currentDate);
+            let arrayUp = arrayOfEvent.events.filter(evento => evento.date > arrayOfEvent.currentDate);
+            console.log(maxPercent(arrayPast));
+            max.innerHTML = `${maxPercent(arrayPast)}`
+            min.innerHTML = `${minPercent(arrayPast)}`
+            larger.innerHTML = `${largerCap(arrayOfEvent.events)}`
+            createTable(arrayUp, "Upcoming")
+            createTable(arrayPast, "Past")
+        } else {
+            arrayOfEvents = arrayOfEvent.events;
+            urlDetails = "./details.html"
+        }
+    })
+    .catch(error => console.log(error))
+
+function maxPercent(array) {
+    let percentage = 0;
+    let currency = 0;
+    let name = ""
+    for (element of array) {
+        currency = (((element.assistance / element.capacity) * 100).toFixed(2))
+        if (currency > percentage) {
+            percentage = currency
+            name = element.name
+        }
+    }
+    return name
+}
+
+function minPercent(array) {
+    let percentage = Infinity;
+    let currency = 0;
+    let name = ""
+    for (element of array) {
+        currency = (((element.assistance / element.capacity) * 100).toFixed(2))
+        if (currency < percentage) {
+            percentage = currency
+            name = element.name
+        }
+    }
+    return name
+}
+
+function createFilters() {
+    createCheckboxes(arrayOfEvents, "Category");
+    createCheckboxes(arrayOfEvents, "Place");
+    createCards(arrayOfEvents, container)
+
+    inputText.addEventListener("input", () => {
+        let filtro = filterByText(arrayOfEvents, inputText.value);
+        let filtro2 = filterByCategory(filtro);
+        createCards(filtro2, container);
+    });
+
+    containerChecks.addEventListener("change", () => {
+        let filtro = filterByCategory(arrayOfEvents);
+        let filtro2 = filterByText(filtro, inputText.value);
+        createCards(filtro2, container);
+    });
+
+}
+
+function largerCap(array) {
+    let object = array.reduce((minObject, object) => object.capacity > minObject.capacity ? object : minObject, array[0]);
+    return object.name
+}
+
+function createTable(array, category) {
+        let html = '';
+            let cat = [...new Set(array.map(elemento => elemento.category))]
+            let subArray = []
+            cat.forEach(type => {
+                let revenues = 0
+                let percentage = 0
+                subArray = array.filter(only => only.category === type)
+                for (let eventt of subArray) {
+                    if (category === "Upcoming") {
+                        revenues += eventt.price * eventt.estimate
+                        percentage = percentage + Number(((eventt.estimate / eventt.capacity) * 100).toFixed(2))
+                    } else {
+                        revenues += eventt.price * eventt.assistance
+                        percentage = percentage + Number(((eventt.assistance / eventt.capacity) * 100).toFixed(2))
+                    }
+                }
+                percentage = percentage / subArray.length
+                html += createTableText(type, revenues, percentage.toFixed(2))
+            });
+            if (category === "Upcoming") {
+                upStats.innerHTML = html;
+            } else {
+                pastStats.innerHTML = html;
+            }
+            
+    
+}
+function createTableText(data, revenues, percentage) {
+    return `<tr>
+    <td>${data}</td>
+    <td>$ ${revenues.toLocaleString('de-DE')}</td>
+    <td>% ${percentage}</td>
+    </tr>`
 }
