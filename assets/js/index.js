@@ -102,9 +102,11 @@ fetch("https://mindhub-xj03.onrender.com/api/amazing")
             urlDetails = "./assets/pages/details.html"
             createFilters()
         } else if (document.title === "Past Events") {
+            urlDetails = "../pages/details.html"
             arrayOfEvents = arrayOfEvent.events.filter(evento => evento.date < arrayOfEvent.currentDate);
             createFilters()
         } else if (document.title === "Upcoming Events") {
+            urlDetails = "../pages/details.html"
             arrayOfEvents = arrayOfEvent.events.filter(evento => evento.date > arrayOfEvent.currentDate);
             createFilters()
         } else if (document.title === "Details") {
