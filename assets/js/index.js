@@ -1,56 +1,79 @@
 const container = document.getElementById("card-container");
-const inputText = document.getElementById('search');
+const max = document.getElementById("max");
+const min = document.getElementById("min");
+const larger = document.getElementById("larger");
+const inputText = document.getElementById("search");
 const containerChecksPlace = document.getElementById("check-place");
 const containerChecks = document.getElementById("check");
 const containerChecksCategory = document.getElementById("check-category");
 const detContainer = document.getElementById("container");
+const upStats = document.getElementById("upcoming-statistics");
+const pastStats = document.getElementById("past-statistics");
 let arrayOfEvents = [];
-let urlDetails = ""
+let arrayOfEvent = [];
+let urlDetails = "";
 
 if (document.title === "Home") {
-    arrayOfEvents = data.events;
-    urlDetails = "./assets/pages/details.html"
+  arrayOfEvents = data.events;
+  urlDetails = "./assets/pages/details.html";
+  poblateAndFilter();
 } else if (document.title === "Past Events") {
-    urlDetails = "./details.html"
-    arrayOfEvents = data.events.filter(evento => evento.date < data.currentDate);
+  urlDetails = "./details.html";
+  arrayOfEvents = data.events.filter(
+    (evento) => evento.date < data.currentDate
+  );
+  poblateAndFilter();
 } else if (document.title === "Upcoming Events") {
-    urlDetails = "./details.html"
-    arrayOfEvents = data.events.filter(evento => evento.date > data.currentDate);
+  urlDetails = "./details.html";
+  arrayOfEvents = data.events.filter(
+    (evento) => evento.date > data.currentDate
+  );
+  poblateAndFilter();
 } else if (document.title === "Details") {
-    const queryString = location.search
-    const params = new URLSearchParams(queryString)
-    const id = params.get("id")
-    let eventt = data.events.find((even) => even._id == id)
-    createCardDetails(eventt)
+  const queryString = location.search;
+  const params = new URLSearchParams(queryString);
+  const id = params.get("id");
+  let eventt = data.events.find((even) => even._id == id);
+  createCardDetails(eventt);
+} else if (document.title === "Stats") {
+  let arrayPast = data.events.filter(
+    (evento) => evento.date < data.currentDate
+  );
+  let arrayUp = data.events.filter((evento) => evento.date > data.currentDate);
+  max.innerHTML = `${maxPercent(arrayPast)}`;
+  min.innerHTML = `${minPercent(arrayPast)}`;
+  larger.innerHTML = `${largerCap(data.events)}`;
+  createTable(arrayUp, "Upcoming");
+  createTable(arrayPast, "Past");
 }
-createCheckboxes(arrayOfEvents, "Category");
-createCheckboxes(arrayOfEvents, "Place");
-createCards(arrayOfEvents, container)
-
-inputText.addEventListener("input", () => {
+function poblateAndFilter() {
+  inputText.addEventListener("input", () => {
     let filtro = filterByText(arrayOfEvents, inputText.value);
     let filtro2 = filterByCategory(filtro);
     createCards(filtro2, container);
-});
-
-containerChecks.addEventListener("change", () => {
+  });
+  containerChecks.addEventListener("change", () => {
     let filtro = filterByCategory(arrayOfEvents);
     let filtro2 = filterByText(filtro, inputText.value);
     createCards(filtro2, container);
-});
+  });
+  createCheckboxes(arrayOfEvents, "Category");
+  createCheckboxes(arrayOfEvents, "Place");
+  createCards(arrayOfEvents, container);
+}
 
 function createCards(arrayEvent, container) {
-    if (arrayEvent == 0) {
-        container.innerHTML = `<h2 class="display-1 fw-bolder text-white text-center bg-danger rounded-3">No results to display</h2>`
-        return
-    }
-    let html = ''
-    arrayEvent.forEach(eventt => html += createCard(eventt))
-    container.innerHTML = html
+  if (arrayEvent == 0) {
+    container.innerHTML = `<h2 class="display-1 fw-bolder text-white text-center bg-danger rounded-3">No results to display</h2>`;
+    return;
+  }
+  let html = "";
+  arrayEvent.forEach((eventt) => (html += createCard(eventt)));
+  container.innerHTML = html;
 }
 
 function createCard(eventt) {
-    return `<div class="card h-100 row py-3" style="width: 18rem">
+  return `<div class="card h-100 row py-3" style="width: 18rem">
         <img src="${eventt.image}" class="card-img-top" alt="${eventt.name}">
         <div class="card-body d-flex flex-column justify-content-between">
             <h5 class="card-title fs-3">${eventt.name}</h5>
@@ -59,56 +82,60 @@ function createCard(eventt) {
                 <a href="${urlDetails}?id=${eventt._id}" class="btn btn-primary flex-end">Details</a>
             </div>
         </div>
-    </div>`
+    </div>`;
 }
 
 function filterByCategory(array) {
-    let arrayCheck = Array.from(document.querySelectorAll("input[type='checkbox']"))
-        .filter(check => check.checked)
-        .map(checked => checked.value);
-    console.log(arrayCheck);
-    if (arrayCheck.length == 0) {
-        return array;
-    }
-    return array.filter(element => {
-        return arrayCheck.some(category => element.category.includes(category)) ||
-            arrayCheck.some(place => element.place.includes(place));
-    });
+  let arrayCheck = Array.from(
+    document.querySelectorAll("input[type='checkbox']")
+  )
+    .filter((check) => check.checked)
+    .map((checked) => checked.value);
+  if (arrayCheck.length == 0) {
+    return array;
+  }
+  return array.filter((element) => {
+    return (
+      arrayCheck.some((category) => element.category.includes(category)) ||
+      arrayCheck.some((place) => element.place.includes(place))
+    );
+  });
 }
 
 function filterByText(array, text) {
-    const lowercaseText = text.toLowerCase();
-    return array.filter(element => element.name.toLowerCase().includes(lowercaseText));
+  const lowercaseText = text.toLowerCase();
+  return array.filter((element) =>
+    element.name.toLowerCase().includes(lowercaseText)
+  );
 }
 
 function createCheckboxes(array, category) {
-    let html = '';
-    if (category === 'Place') {
-        let place = [...new Set(array.map(elemento => elemento.place))]
-        place.forEach(place => (html += createCheckbox(place)));
-        containerChecksPlace.innerHTML = html;
-    } else if (category === 'Category') {
-        let place = [...new Set(array.map(elemento => elemento.category))]
-        place.forEach(place => (html += createCheckbox(place)));
-        containerChecksCategory.innerHTML = html;
-    }
-
+  let html = "";
+  if (category === "Place") {
+    let place = [...new Set(array.map((elemento) => elemento.place))];
+    place.forEach((place) => (html += createCheckbox(place)));
+    containerChecksPlace.innerHTML = html;
+  } else if (category === "Category") {
+    let place = [...new Set(array.map((elemento) => elemento.category))];
+    place.forEach((place) => (html += createCheckbox(place)));
+    containerChecksCategory.innerHTML = html;
+  }
 }
 
 function createCheckbox(data) {
-    return `<li class="d-flex justify-content-between px-2"><div class="form-check form-switch">
+  return `<li class="d-flex justify-content-between px-2"><div class="form-check form-switch">
       <input class="form-check-input" type="checkbox" value="${data}" role="switch" id="${data}">
       <label class="form-check-label" for="${data}">${data}</label>
     </div></li>`;
 }
 
 function createCardDetails(eventt) {
-    let cardDetail = document.createElement("div")
-    cardDetail.className = "card"
-    cardDetail.style.maxWidth = "80%"
-    cardDetail.style.minHeight = "20rem"
-    cardDetail.style.padding = "0.5rem"
-    cardDetail.innerHTML = `<div class="card-body">
+  let cardDetail = document.createElement("div");
+  cardDetail.className = "card";
+  cardDetail.style.maxWidth = "80%";
+  cardDetail.style.minHeight = "20rem";
+  cardDetail.style.padding = "0.5rem";
+  cardDetail.innerHTML = `<div class="card-body">
     <h5 class="card-title">${eventt.name}</h5>
     <h6 class="card-subtitle mb-2 text-body-secondary">${eventt.description}</h6>
     <p class="card-text">Date: ${eventt.date}</p>
@@ -117,6 +144,80 @@ function createCardDetails(eventt) {
     <p class="card-text">Place: ${eventt.place}</p>
     <p class="card-text">Capacity: ${eventt.capacity}</p>
     <p class="card-text">Estimated: ${eventt.estimate}</p>
-  </div>`
-  detContainer.appendChild(cardDetail)
+  </div>`;
+  detContainer.appendChild(cardDetail);
+}
+
+function largerCap(array) {
+  let object = array.reduce(
+    (minObject, object) =>
+      object.capacity > minObject.capacity ? object : minObject,
+    array[0]
+  );
+  return object.name;
+}
+
+function createTable(array, category) {
+  let html = "";
+  let cat = [...new Set(array.map((elemento) => elemento.category))];
+  let subArray = [];
+  cat.forEach((type) => {
+    let revenues = 0;
+    let percentage = 0;
+    subArray = array.filter((only) => only.category === type);
+    for (let eventt of subArray) {
+      if (category === "Upcoming") {
+        revenues += eventt.price * eventt.estimate;
+        percentage =
+          percentage +
+          Number(((eventt.estimate / eventt.capacity) * 100).toFixed(2));
+      } else {
+        revenues += eventt.price * eventt.assistance;
+        percentage =
+          percentage +
+          Number(((eventt.assistance / eventt.capacity) * 100).toFixed(2));
+      }
+    }
+    percentage = percentage / subArray.length;
+    html += createTableText(type, revenues, percentage.toFixed(2));
+  });
+  if (category === "Upcoming") {
+    upStats.innerHTML = html;
+  } else {
+    pastStats.innerHTML = html;
+  }
+}
+function createTableText(data, revenues, percentage) {
+  return `<tr>
+    <td>${data}</td>
+    <td>$ ${revenues.toLocaleString("de-DE")}</td>
+    <td>% ${percentage}</td>
+    </tr>`;
+}
+function maxPercent(array) {
+  let percentage = 0;
+  let currency = 0;
+  let name = "";
+  for (element of array) {
+    currency = ((element.assistance / element.capacity) * 100).toFixed(2);
+    if (currency > percentage) {
+      percentage = currency;
+      name = element.name;
+    }
+  }
+  return name;
+}
+
+function minPercent(array) {
+  let percentage = Infinity;
+  let currency = 0;
+  let name = "";
+  for (element of array) {
+    currency = ((element.assistance / element.capacity) * 100).toFixed(2);
+    if (currency < percentage) {
+      percentage = currency;
+      name = element.name;
+    }
+  }
+  return name;
 }
